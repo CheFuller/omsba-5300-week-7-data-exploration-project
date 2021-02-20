@@ -22,6 +22,12 @@ library(jtools)
 library(estimatr)
 ```
 
+## Read files
+
+```{r}
+list.files(path = "/data", pattern = "trends_up_to_")
+```
+
 ## Data Wrangling
 
 
@@ -45,7 +51,6 @@ library(estimatr)
 
 ## The Writeup
 
-```{r}
-```
+
 
 
