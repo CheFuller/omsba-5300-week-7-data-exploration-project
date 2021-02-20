@@ -11,21 +11,16 @@ knitr::opts_chunk$set(echo = TRUE)
 
 ## Libraries
 
-In the following codeIn the following code chunk, load all the libraries you will need: 
+In the following code chunk, load all the libraries you will need: 
 
 ```{r}
-library(tidyverse)
-library(dplyr)
-library(ggplot2)
-library(vtable)
-library(jtools)
-library(estimatr)
+source("../code/01_dep_load_libraries.R")
 ```
 
 ## Read files
 
 ```{r}
-list.files(path = "/data", pattern = "trends_up_to_")
+source("../code/02_dep_read_data.R")
 ```
 
 ## Data Wrangling

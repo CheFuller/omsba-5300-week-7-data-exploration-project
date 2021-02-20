@@ -18,6 +18,6 @@ process_file <- function(filename){
 }
 
 compile_data <- file_list %>%
-  map(read_csv) %>%
   map(process_file)%>%
+  map(read_csv) %>%
   bind_rows()
