@@ -1,0 +1,51 @@
+---
+title: "Week 7 Data Exploration Project"
+author: "Chequala Fuller"
+date: "2/20/2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Libraries
+
+In the following codeIn the following code chunk, load all the libraries you will need: 
+
+```{r}
+library(tidyverse)
+library(dplyr)
+library(ggplot2)
+library(vtable)
+library(jtools)
+library(estimatr)
+```
+
+## Data Wrangling
+
+
+```{r}
+
+```
+
+## Tidy Data
+
+```{r}
+
+```
+
+## Data Analysis
+
+
+
+```{r}
+```
+
+
+## The Writeup
+
+```{r}
+```
+
+
