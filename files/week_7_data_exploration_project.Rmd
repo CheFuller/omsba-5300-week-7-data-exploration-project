@@ -11,36 +11,52 @@ knitr::opts_chunk$set(echo = TRUE)
 
 ## Libraries
 
-In the following code chunk, load all the libraries you will need: 
+Before reading in the necessary data, we will need to load all libraries required to execute this analysis. 
 
-```{r}
+```{r, echo = FALSE}
 source("../code/01_dep_load_libraries.R")
 ```
 
 ## Read files
 
-```{r}
+Once libraries are successfully loaded, read in the appropriate data files. For this data exploration project, we will be using the provided _Most+Recent+Cohorts+(Scorecard+Elements).csv_, _id_name_link.csv_, and twelve data files with the naming convention pattern _trend_up_to_xx.csv_ to perform our analysis.  To read these data files, we use the _list.files()_ and _map()_ functions from the _tidyverse_ package as well as the _read_csv_ from the built-in _readr_ package. The following dataframes, values, and functions have been assigned and/or created to prepare us for tidy data.
+
+
+Dataframes         | No. Observations | No. Variables
+------------------ | ---------------- | -------------
+recent_cohorts     | 7804             | 122
+id_name_link       | 3555             | 3
+compile_data       | 1593740          | 6
+
+Values             | Type
+------------------ | ----------------
+file_list          | chr [1:12]
+
+Functions          | Parameter(s)
+------------------ | ----------------
+process_file       | function(filename)
+
+
+```{r, echo = FALSE, results = 'hide'}
 source("../code/02_dep_read_data.R")
 ```
 
-## Data Wrangling
-
-
-```{r}
-
-```
 
 ## Tidy Data
 
-```{r}
 
+```{r}
+source("../code/03_dep_tidy_data.R")
 ```
+
+
 
 ## Data Analysis
 
 
 
 ```{r}
+source("../code/04_dep_data_analysis.R")
 ```
 
 
