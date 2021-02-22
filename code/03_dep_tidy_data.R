@@ -61,12 +61,12 @@ standardized_var <- coll_scorecd_bs %>%
 # Add high earnings (HIGHEARN) binary variable to standardized_var data frame. 
 # For all median earnings above threshold HIGHEARN = 1, else HIGHEARN = 0. 
 
-standardized_var$HIGHEARN <- ifelse(standardized_var$MEDEARN10 >= median_earning, 1, 0)
+standardized_var$HIGHEARN <- ifelse(standardized_var$MEDEARN10 >= median_earning, 1, 0)     #dummy variable
 
 
 # Data frame to look at data prior to September 1, 2015
 pre_sep2015 <- standardized_var %>%
-  mutate(DATE = substr(MONTHORWEEKk, 1, 10)) %>%
+  mutate(DATE = substr(MONTHORWEEK, 1, 10)) %>%
   mutate(DATE = as.Date(DATE)) %>%
   filter(DATE < '2015-09-01')
 

@@ -44,7 +44,7 @@ source("../code/02_dep_read_data.R")
 
 ## Tidy Data
 
-Now, that we have all of our desired data read, let's clean it up and prepare it for the regression model(s), graph(s) and analysis.
+Now, that all of desired data is read, let's clean it up and prepare it for the regression model(s), graph(s) and analysis.
 
 First, we'll create a new data frame for the id name scorecards and call it scorecd_id_name. We'll accomplish this by merging the recent_cohorts and id_name_link data frames together by both unit ID (UNITID) and ope ID (OPEID). 
 
