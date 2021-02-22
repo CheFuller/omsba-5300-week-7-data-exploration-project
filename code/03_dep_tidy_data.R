@@ -47,6 +47,7 @@ median_earning <- median(coll_scorecd_bs$MEDEARN10)                            #
 # creating a new data frame which groups them by their key number (KEYNUM)then summarizes them.
 
 standardized_var <- coll_scorecd_bs %>%
+  mutate(SD_INDEX = (INDEX - mean(INDEX))/sd(INDEX))%>%                        # create new variable for standardizing independent variable, INDEX
   group_by(KEYNUM) %>%
-  summarise(SD_INDEX = (INDEX - mean(INDEX))/sd(INDEX), SCHNAME, CONTROL, KEYWORD,
-            MONTHORWEEK, KEYNUM, MEDEARN10, SD_INDEX)
+  summarise(KEYNUM, SCHNAME, KEYWORD, SD_INDEX, INDEX, CONTROL,
+            MONTHORWEEK, MEDEARN10)
