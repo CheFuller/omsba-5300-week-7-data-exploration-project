@@ -24,12 +24,17 @@ coll_scorecd <- merge(x = scorecd_id_name, y = compile_data,
 # Now that we have our college scorecard (coll_scorecd) let's clean it up some
 # more by mutating and selecting specific variables to make it easier for modeling
 
+# Isolate the first ten characters of the MONTHORWEEK variable to make it easier
+# to work with the date (DATE) associated with each observation
+
 coll_scorecd_bs <- coll_scorecd %>%
   rename(MEDEARN10 = 'MD_EARN_WNE_P10-REPORTED-EARNINGS') %>%
+  filter(PREDDEG == 3) %>%
   filter(MEDEARN10 != 'NULL') %>%
   filter(MEDEARN10 != 'PrivacySuppressed') %>%                                 # filter out any cells with NULL and PrivacySuppressed
-  filter(PREDDEG == 3) %>%
-  mutate(MEDEARN10 = as.numeric(MEDEARN10))
+  mutate(MEDEARN10 = as.numeric(MEDEARN10))%>%
+  mutate(DATE = substr(MONTHORWEEK, 1, 10)) %>%
+  mutate(DATE = as.Date(DATE))
 
 coll_scorecd_bs <- coll_scorecd_bs %>%
   select('UNITID', 'OPEID', 'SCHNAME', 'PREDDEG', 'CONTROL',
@@ -52,12 +57,22 @@ standardized_var <- coll_scorecd_bs %>%
   summarise(KEYNUM, SCHNAME, KEYWORD, SD_INDEX, INDEX, CONTROL,
             MONTHORWEEK, MEDEARN10)
 
+  
 # Add high earnings (HIGHEARN) binary variable to standardized_var data frame. 
 # For all median earnings above threshold HIGHEARN = 1, else HIGHEARN = 0. 
 
 standardized_var$HIGHEARN <- ifelse(standardized_var$MEDEARN10 >= median_earning, 1, 0)
 
-# Isolate the first ten characters of the MONTHORWEEK variable to make it easier
-# to work with the date (DATE) associated with each observation
+
+# Data frame to look at data prior to September 1, 2015
+pre_sep2015 <- standardized_var %>%
+  mutate(DATE = substr(MONTHORWEEKk, 1, 10)) %>%
+  mutate(DATE = as.Date(DATE)) %>%
+  filter(DATE < '2015-09-01')
 
 
+# Data frame to look at data starting September 1, 2015 and after
+post_sep2015 <- standardized_var %>%
+  mutate(DATE = substr(MONTHORWEEK, 1, 10)) %>%
+  mutate(DATE = as.Date(DATE)) %>%
+  filter(DATE >= '2015-09-01')

@@ -19,7 +19,7 @@ source("../code/01_dep_load_libraries.R")
 
 ## Read files
 
-Once libraries are successfully loaded, read in the appropriate data files. For this data exploration project, we will be using the provided _Most+Recent+Cohorts+(Scorecard+Elements).csv_, _id_name_link.csv_, and twelve data files with the naming convention pattern _trend_up_to_xx.csv_ to perform our analysis.  To read these data files, we use the _list.files()_ and _map()_ functions from the _tidyverse_ package as well as the _read_csv_ from the built-in _readr_ package. The following dataframes, values, and functions have been assigned and/or created to prepare us for tidy data.
+Once libraries are successfully loaded, read in the appropriate data files. For this data exploration project, we will be using the provided _Most+Recent+Cohorts+(Scorecard+Elements).csv_, _id_name_link.csv_, and twelve data files with the naming convention pattern _trend_up_to_xx.csv_ to perform our analysis.  To read these data files, we use the _list.files()_ and _map()_ functions from the _tidyverse_ package as well as the _read_csv_ from the built-in _readr_ package. The following data frames, values, and functions have been assigned and/or created to prepare for tidy data.
 
 
 Dataframes         | No. Observations | No. Variables
@@ -45,6 +45,9 @@ source("../code/02_dep_read_data.R")
 ## Tidy Data
 
 Now, that we have all of our desired data read, let's clean it up and prepare it for the regression model(s), graph(s) and analysis.
+
+First, we'll create a new data frame for the id name scorecards and call it scorecd_id_name. We'll accomplish this by merging the recent_cohorts and id_name_link data frames together by both unit ID (UNITID) and ope ID (OPEID). 
+
 
 
 ```{r, echo = FALSE, results = 'hide'}
