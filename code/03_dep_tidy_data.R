@@ -1,8 +1,8 @@
 ## Load libraries
-source("../code/01_dep_load_libraries.R")
+#source("../code/01_dep_load_libraries.R")
 
 ## Read in data files
-source("../code/02_dep_read_data.R")
+#source("../code/02_dep_read_data.R")
 
 ## Start performing tidy data
 
@@ -51,3 +51,13 @@ standardized_var <- coll_scorecd_bs %>%
   group_by(KEYNUM) %>%
   summarise(KEYNUM, SCHNAME, KEYWORD, SD_INDEX, INDEX, CONTROL,
             MONTHORWEEK, MEDEARN10)
+
+# Add high earnings (HIGHEARN) binary variable to standardized_var data frame. 
+# For all median earnings above threshold HIGHEARN = 1, else HIGHEARN = 0. 
+
+standardized_var$HIGHEARN <- ifelse(standardized_var$MEDEARN10 >= median_earning, 1, 0)
+
+# Isolate the first ten characters of the MONTHORWEEK variable to make it easier
+# to work with the date (DATE) associated with each observation
+
+

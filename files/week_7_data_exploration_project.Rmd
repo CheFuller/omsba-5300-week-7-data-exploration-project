@@ -44,8 +44,10 @@ source("../code/02_dep_read_data.R")
 
 ## Tidy Data
 
+Now, that we have all of our desired data read, let's clean it up and prepare it for the regression model(s), graph(s) and analysis.
 
-```{r}
+
+```{r, echo = FALSE, results = 'hide'}
 source("../code/03_dep_tidy_data.R")
 ```
 
