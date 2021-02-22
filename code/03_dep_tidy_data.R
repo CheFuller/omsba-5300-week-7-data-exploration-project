@@ -78,17 +78,17 @@ post_sep2015 <- standardized_var %>%
   filter(DATE >= '2015-09-01')
 
 # Create data frames for both high and low earnings before Sept 2015
-model_presept15 <- standardized_var
-model_presept15 <- model_presept15 %>%
+m_presept15 <- standardized_var
+m_presept15 <- m_presept15 %>%
   mutate(DATE = substr(MONTHORWEEK, 1, 10)) %>%
   mutate(DATE = as.Date(DATE))
 
-model_presept15$pre_sept15 <- ifelse(model_presept15$DATE >= '2015-09-01', 1, 0)
+m_presept15$pre_sept15 <- ifelse(m_presept15$DATE >= '2015-09-01', 1, 0)
 
-highearn_presept2015 <- pre_sept15 %>%
+highearn_presept2015 <- m_presept15 %>%
   filter(HIGHEARN == 1) %>%
-  filter(AfterS15 == 1)
+  filter(pre_sept15 == 1)
 
-lowearn_presept2015 <- pre_sept15 %>%
-  filter(High_Earn == 0) %>%
-  filter(AfterS15 == 1)
+lowearn_presept2015 <- m_presept15 %>%
+  filter(HIGHEARN == 0) %>%
+  filter(pre_sept15 == 1)

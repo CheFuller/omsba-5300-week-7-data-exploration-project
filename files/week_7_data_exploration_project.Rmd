@@ -9,9 +9,15 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
+## OBJECTIVE
+For the Week 7 Data Exploration Project, the class has been tasked to answer the research question of "Among colleges that predominantly grant bachelor’s degrees, did it result in more student interest in high-earnings colleges relative to low-earnings ones (as proxied by Google searches for keywords associated with those colleges)?" Given the necessary data, our task includes producing at least one regression and one graph for the analysis, telling the story of what they mean.
+
+
+## STEPS TAKEN
+
 ## Libraries
 
-Before reading in the necessary data, we will need to load all libraries required to execute this analysis. 
+Before reading in the necessary data, all libraries required to execute this analysis needed to be loaded. 
 
 ```{r, echo = FALSE}
 source("../code/01_dep_load_libraries.R")
@@ -19,7 +25,7 @@ source("../code/01_dep_load_libraries.R")
 
 ## Read files
 
-Once libraries are successfully loaded, read in the appropriate data files. For this data exploration project, we will be using the provided _Most+Recent+Cohorts+(Scorecard+Elements).csv_, _id_name_link.csv_, and twelve data files with the naming convention pattern _trend_up_to_xx.csv_ to perform our analysis.  To read these data files, we use the _list.files()_ and _map()_ functions from the _tidyverse_ package as well as the _read_csv_ from the built-in _readr_ package. The following data frames, values, and functions have been assigned and/or created to prepare for tidy data.
+Upon successfully loading the libraries, I read in the appropriate data files. For this data exploration project, we specifically used the provided _Most+Recent+Cohorts+(Scorecard+Elements).csv_, _id_name_link.csv_, and twelve data files with the naming convention pattern _trend_up_to_xx.csv_ to perform the analysis.  To read these data files, I utilized the _list.files()_ and _map()_ functions from the _tidyverse_ package as well as the _read_csv_ from the built-in _readr_ package. The following data frames, values, and functions have been assigned and/or created to prepare for the next step which is to tidy up the data.
 
 
 Dataframes         | No. Observations | No. Variables
@@ -46,19 +52,17 @@ source("../code/02_dep_read_data.R")
 
 Though all desired data has been read, it required more clean up to prepare for the regression model(s), graph(s) and analysis. First, I created a new data frame for the id name scorecards and called it scorecd_id_name. I chose to accomplish this by merging the recent_cohorts and id_name_link data frames together by both unit ID (UNITID) and ope ID (OPEID). Next, I created another data frame for the college scorecard through merging the scorecd_id_name data frame with our compile_data data frame by school name (SCHNAME). Considering the objective of the research question, this would give us a more comprehensive spreadsheet to work with.
 
-
 After establishing the college scorecard (coll_scorecd), some more tidying was still needed and was accomplished by mutating and selecting specific variables for colleges which perdominantly grant bachelor's degrees (coll_scorecd_bs) to make it easier for modeling. This step also included isolation of the first ten characters of the MONTHORWEEK variable to make it easier to work with the date (DATE) associated with each observation. With the data in decent shape at this point, I was able to identify the threshold for median earnings by calculating the median of all median earnings for all colleges (MEDEARN10). Further defining the threshold for high-earnings (> 41,800 dollars) vs. low-earnings (<41,800 dollars).
 
-To better make a direct comparison for this analysis, I converted the independent variable (INDEX) to a measure of standard deviations from its mean, creating a new data frame which groups the data by their key number (KEYNUM) and summarizes them. Finally, I added high earnings (HIGHEARN) binary variable to standardized_var data frame to use as the dummy variable (for all median earnings above threshold HIGHEARN = 1, else HIGHEARN = 0) and created data frames for data collected before the September 2015 release (pre_sept2015) as well as after (post_sept2015). This was decided because 
+To make a direct comparison for this analysis, I converted the independent variable (INDEX) to a measure of standard deviations from its mean, creating a new data frame which groups the data by their key number (KEYNUM) and summarizes them. Finally, I added high earnings (HIGHEARN) binary variable to standardized_var data frame to use as the dummy variable (for all median earnings above threshold HIGHEARN = 1, else HIGHEARN = 0) and created data frames for data collected before the September 2015 release (pre_sept2015) as well as after (post_sept2015). This was decided because 
 
 
 ```{r, echo = FALSE, results = 'hide'}
 source("../code/03_dep_tidy_data.R")
 ```
 
-
-## Data Analysis
-
+As a  foundation for the analysis, I have chosen to create a base model with a bivariate OLS
+regressing MEDEARN10 on SD_INDEX since we are interested in how earning may impact a student's intterest in a specific college.
 
 ```{r, echo = FALSE}
 #####################################################################
@@ -84,8 +88,9 @@ labs(x = "Standardized Index", y = "Median Earnings",
 model_01 <- lm(MEDEARN10 ~ SD_INDEX, data = pre_sep2015)
 model_02 <- lm(MEDEARN10 ~ SD_INDEX, data = post_sep2015) 
 export_summs(model_01, model_02)
-
-
+```
+## Model 1 & 2 Graphs
+```{r, echo = FALSE}
 ggplot(data = model_01, aes(x = SD_INDEX, y = MEDEARN10)) +
   geom_smooth() + 
   labs(x = "Standardized Index", y = "Median Earnings",
@@ -97,14 +102,39 @@ ggplot(data = model_02, aes(x = SD_INDEX, y = MEDEARN10)) +
        title = "Student Interest vs. Median  Earnings of Grads (Model 2: After Sept 2015)")
 ```
 
+After performing the base models regressing median earnings on standardized index,the graphs had indicated that the models were nonlinear. Between the pre_sept15 regression (model_01) and the post_sept15 (model_02), model_01 looked better. Therefore, I had decided to use model_01 and expand on it by adding multiple controls (i.e. CONTROL, HIGHEARN, and DATE) and a polynomial term to figure out how the variables may effect the MEDEARN10 and if HIGHEARN follows a polynomial. Hopefully, improving the regression model.
 
 ```{r, echo = FALSE}
+########################################################################
+# MODEL 3 & 4: Multivariate OLS regressing median earnings (MEDEARN10) #
+# on standardized index (SD)INDEX) with controls on CONTROL, HIGHEARN, #
+# and DATE as well as a polynomial term on HIGHEARN for both high      #
+# earnings and low earnings before September 2015, respectively        #
+########################################################################
+
+model_03 <- lm(MEDEARN10 ~ SD_INDEX + CONTROL + HIGHEARN + I(HIGHEARN^2) + DATE, data = highearn_presept2015)
+model_04 <- lm(MEDEARN10 ~ SD_INDEX + CONTROL + HIGHEARN + I(HIGHEARN^2) + DATE, data = lowearn_presept2015)
+export_summs(model_03, model_04)
 
 ```
+## Model 3 & 4 Graphs
 
-## The Writeup
+```{r, echo = FALSE}
+ggplot(data = model_03, aes(x = SD_INDEX, y = MEDEARN10)) +
+  geom_smooth() + 
+  labs(x = "Standardized Index", y = "High Earnings",
+       title = "Student Interest vs. High  Earnings of Grads (Model 3: Before Sept 2015)")
+
+ggplot(data = model_04, aes(x = SD_INDEX, y = MEDEARN10)) +
+  geom_smooth() + 
+  labs(x = "Standardized Index", y = "Low Earnings",
+       title = "Student Interest vs. High  Earnings of Grads (Model 4: Before Sept 2015)")
+```
+Based on the regressions of model_03 and model_04, the average median earning for graduates who graduated from all colleges before September 1, 2015 was $43,519.98. With a one unit increase in keywords indexed before September 1, 2015, there is an __ increase of student interest of 
+
+## CONCLUSION
 
 How should the regression model be designed to answer the question           (transformations and functional form? Standard error adjustments?          etc.), and how can we interpret the results once we have them?
 
-After performing the base models regressing median earnings on standardized index,the graphs had indicated that the graphs were nonlinear. Although nonlinear, between pre_sept15 regression (model_01) and post_sept15 (model_02), model_01 looked better than model_02. Therefore, I had decided to use model_01 and expand on it by adding multiple controls and a polynomial term to figure out if high earnings (HIGHEARN) follows a polynomial. Hopefully, immproving the regression model.
+
 
