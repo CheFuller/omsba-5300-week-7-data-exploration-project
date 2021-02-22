@@ -43,8 +43,8 @@ ggplot(data = model_02, aes(x = SD_INDEX, y = MEDEARN10)) +
 
 ########################################################################
 # MODEL 3 & 4: Multivariate OLS regressing median earnings (MEDEARN10) #
-# on standardized index (SD)INDEX) with controls on CONTROL, HIGHEARN, #
-# and DATE as well as a polynomial term on HIGHEARN for both high      #
+# on standardized index (SD)INDEX) with controls on CONTROL, and       #
+# HIGHEARN, as well as a polynomial term on HIGHEARN for both high     #
 # earnings and low earnings before September 2015, respectively        #
 ########################################################################
 
@@ -56,9 +56,8 @@ ggplot(data = model_02, aes(x = SD_INDEX, y = MEDEARN10)) +
 # the MEDEARN10 and if high earnings (HIGHEARN) follows a polynomial. Hopefully, improving the regression model.
 # improve the regression on model_01.
 
-model_03 <- lm(MEDEARN10 ~ SD_INDEX + CONTROL + HIGHEARN + I(HIGHEARN^2) + DATE, data = highearn_presept2015)
-model_04 <- lm(MEDEARN10 ~ SD_INDEX + CONTROL + HIGHEARN + I(HIGHEARN^2) + DATE, data = lowearn_presept2015)
-export_summs(model_03, model_04)
+model_03 <- lm(MEDEARN10 ~ SD_INDEX + CONTROL + HIGHEARN + I(HIGHEARN^2), data = highearn_presept2015)
+model_04 <- lm(MEDEARN10 ~ SD_INDEX + CONTROL + HIGHEARN + I(HIGHEARN^2), data = lowearn_presept2015)
 
 # The average median earning for graduates who graduated from all colleges before September 1, 2015
 # was $43,519.98. With a one unit increase in keywords indexed before September 1, 2015, there is an __ increase of student interest of 

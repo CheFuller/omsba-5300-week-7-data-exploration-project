@@ -114,8 +114,8 @@ After performing the base models regressing median earnings on standardized inde
 
 model_03 <- lm(MEDEARN10 ~ SD_INDEX + CONTROL + HIGHEARN + I(HIGHEARN^2) + DATE, data = highearn_presept2015)
 model_04 <- lm(MEDEARN10 ~ SD_INDEX + CONTROL + HIGHEARN + I(HIGHEARN^2) + DATE, data = lowearn_presept2015)
-export_summs(model_03, model_04)
-
+view(model_03)
+view(model_04)
 ```
 ## Model 3 & 4 Graphs
 
@@ -130,11 +130,11 @@ ggplot(data = model_04, aes(x = SD_INDEX, y = MEDEARN10)) +
   labs(x = "Standardized Index", y = "Low Earnings",
        title = "Student Interest vs. High  Earnings of Grads (Model 4: Before Sept 2015)")
 ```
-Based on the regressions of model_03 and model_04, the average median earning for graduates who graduated from all colleges before September 1, 2015 was $43,519.98. With a one unit increase in keywords indexed before September 1, 2015, there is an __ increase of student interest of 
+
 
 ## CONCLUSION
 
-How should the regression model be designed to answer the question           (transformations and functional form? Standard error adjustments?          etc.), and how can we interpret the results once we have them?
+Based on the regressions of model_03 and model_04, it doesn't appear that the model improved much. Given the results of the regression, the average median earning for graduates who graduated from all colleges before September 1, 2015 was $48,338.98. For every one unit of standardized index score increase in median earnings, there is an associated increase of 149 for student interest. High earning colleges will add 1900 to those who graduate. 
 
 
 
