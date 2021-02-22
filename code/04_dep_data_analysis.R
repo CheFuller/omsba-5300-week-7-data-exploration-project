@@ -30,9 +30,7 @@ model_01 <- lm(MEDEARN10 ~ SD_INDEX, data = pre_sep2015)
 model_02 <- lm(MEDEARN10 ~ SD_INDEX, data = post_sep2015) 
 export_summs(model_01, model_02)
 
-# The average median earning for graduates who graduated from all colleges before September 1, 2015
-# was $43,519.98. With a one unit increase in keywords indexed before September 1, 2015, there is an __ increase of student interest of 
-# 
+
 ggplot(data = model_01, aes(x = SD_INDEX, y = MEDEARN10)) +
   geom_smooth() + 
   labs(x = "Standardized Index", y = "Median Earnings",
@@ -49,19 +47,20 @@ ggplot(data = model_02, aes(x = SD_INDEX, y = MEDEARN10)) +
 ########################################################################
 
 # After performing the base models regressing median earnings on standardized index,
-# the graphs had indicated that the graphs were nonlinear. There for I decided to add multiple
-# controls as well as a polynomial term to determine if that would improve the regression model.
+# the graphs had indicated that the graphs were nonlinear. Although nonlinear, between 
+# pre_sept15 regression (model_01) and post_sept15 (model_02), model_01 looked better than model_02.
+# Therefore, I had decided to use model_01 and expand on it by adding multiple controls and a polynomial 
+# term to figure out if high earnings (HIGHEARN) follows a polynomial. Hopefully, immproving the regression model.
+# improve the regression on model_01.
 
-model_03 <- lm(MEDEARN10 ~ SD_INDEX + factor(CONTROL) + HIGHEARN + DATE, data = pre_sep2015)
-model_04 <- lm(MEDEARN10 ~ SD_INDEX + factor(CONTROL) + HIGHEARN + DATE, data = post_sep2015)
-export_summs(model_03, model_04)
+model_03 <- lm(MEDEARN10 ~ SD_INDEX + CONTROL + HIGHEARN + I(HIGHEARN^2) + DATE, data = pre_sep2015)
+export_summs(model_03)
 
-ggplot(data = model_01, aes(x = SD_INDEX, y = MEDEARN10)) +
+# The average median earning for graduates who graduated from all colleges before September 1, 2015
+# was $43,519.98. With a one unit increase in keywords indexed before September 1, 2015, there is an __ increase of student interest of 
+# 
+
+ggplot(data = model_03, aes(x = SD_INDEX, y = MEDEARN10)) +
   geom_smooth() + 
   labs(x = "Standardized Index", y = "Median Earnings",
        title = "Student Interest vs. Median  Earnings of Grads (Model 3: Before Sept 2015)")
-
-ggplot(data = model_01, aes(x = SD_INDEX, y = MEDEARN10)) +
-  geom_smooth() + 
-  labs(x = "Standardized Index", y = "Median Earnings",
-       title = "Student Interest vs. Median  Earnings of Grads (Model 4: After Sept 2015)")

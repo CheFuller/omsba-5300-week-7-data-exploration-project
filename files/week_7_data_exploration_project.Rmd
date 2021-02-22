@@ -44,10 +44,9 @@ source("../code/02_dep_read_data.R")
 
 ## Tidy Data
 
-Now, that all of desired data is read, let's clean it up and prepare it for the regression model(s), graph(s) and analysis.
+Although all of desired data has been read, it requires a bit of clean up to prepare it for the regression model(s), graph(s) and analysis. First, we'll create a new data frame for the id name scorecards and call it scorecd_id_name. We'll accomplish this by merging the recent_cohorts and id_name_link data frames together by both unit ID (UNITID) and ope ID (OPEID). Next, create another data frame for the college scorecard through merging the scorecd_id_name data frame with our compile_data data frame by school name (SCHNAME). This will give us a more comprehensive spreadsheet to work with.
 
-First, we'll create a new data frame for the id name scorecards and call it scorecd_id_name. We'll accomplish this by merging the recent_cohorts and id_name_link data frames together by both unit ID (UNITID) and ope ID (OPEID). 
-
+Although we have our college scorecard (coll_scorecd), some more tidying is still needed and is accomplished by mutating and selecting specific variables for colleges which perdominantly grant bachelor's degrees (coll_scorecd_bs) to make it easier for modeling. This step also included isolation of the first ten characters of the MONTHORWEEK variable to make it easier to work with the date (DATE) associated with each observation. With the data in decent shape at this point, I was able to identify the threshold for median earnings by calculating the median of all median earnings for all colleges (MEDEARN10). Further defining the threshold for high-earnings (> 41,800 dollars) vs. low-earnings (<41,800 dollars).
 
 
 ```{r, echo = FALSE, results = 'hide'}
@@ -59,10 +58,47 @@ source("../code/03_dep_tidy_data.R")
 ## Data Analysis
 
 
-```{r}
-source("../code/04_dep_data_analysis.R")
+```{r, echo = FALSE}
+#####################################################################
+# BASE MODEL: Bivariate OLS regresssing median earnings             #
+# (MEDEARN10) on standardized index (SD_INDEX)                      #                  
+#####################################################################
+
+model_base <- lm(MEDEARN10 ~ SD_INDEX, data = standardized_var)
+
+ggplot(data = model_base, aes(x = SD_INDEX, y = MEDEARN10)) + 
+geom_smooth() + 
+labs(x = "Standardized Index", y = "Median Earnings",
+     title = "Student Interest vs. Median  Earnings of Grads (Base Model)")
 ```
 
+
+```{r, echo = FALSE}
+####################################################################
+# MODEL 1 & 2: Bivariate OLS regressing median earnings (MEDEARN10)#
+# on standardized index (INDEX) prior to September 1, 2015         #
+####################################################################
+
+model_01 <- lm(MEDEARN10 ~ SD_INDEX, data = pre_sep2015)
+model_02 <- lm(MEDEARN10 ~ SD_INDEX, data = post_sep2015) 
+export_summs(model_01, model_02)
+
+
+ggplot(data = model_01, aes(x = SD_INDEX, y = MEDEARN10)) +
+  geom_smooth() + 
+  labs(x = "Standardized Index", y = "Median Earnings",
+       title = "Student Interest vs. Median  Earnings of Grads (Model 1: Before Sept 2015)")
+
+ggplot(data = model_02, aes(x = SD_INDEX, y = MEDEARN10)) +
+  geom_smooth() + 
+  labs(x = "Standardized Index", y = "Median Earnings",
+       title = "Student Interest vs. Median  Earnings of Grads (Model 2: After Sept 2015)")
+```
+
+
+```{r, echo = FALSE}
+
+```
 
 ## The Writeup
 
@@ -74,4 +110,5 @@ The College Scorecard was released at the start of September 2015. Among college
   
   c. How should the regression model be designed to answer the question           (transformations and functional form? Standard error adjustments?          etc.), and how can we interpret the results once we have them?
 
+After performing the base models regressing median earnings on standardized index,the graphs had indicated that the graphs were nonlinear. Although nonlinear, between pre_sept15 regression (model_01) and post_sept15 (model_02), model_01 looked better than model_02. Therefore, I had decided to use model_01 and expand on it by adding multiple controls and a polynomial term to figure out if high earnings (HIGHEARN) follows a polynomial. Hopefully, immproving the regression model.
 
