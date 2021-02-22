@@ -61,6 +61,12 @@ source("../code/04_dep_data_analysis.R")
 
 ## The Writeup
 
+The College Scorecard was released at the start of September 2015. Among colleges that predominantly grant bachelor’s degrees, did it result in more student interest in high-earnings colleges relative to low-earnings ones (as proxied by Google searches for keywords associated with those colleges)?
 
+  a. how can we define “high-earning” and “low-earning” colleges? There’s         not a single answer - be ready to defend your choice.
+  
+  b. What level should the data be at?
+  
+  c. How should the regression model be designed to answer the question           (transformations and functional form? Standard error adjustments?          etc.), and how can we interpret the results once we have them?
 
 

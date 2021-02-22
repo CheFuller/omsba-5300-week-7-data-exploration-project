@@ -19,4 +19,34 @@ scorecd_id_name <- merge(x = id_name_link, y = recent_cohorts,
 # to work with.
 
 coll_scorecd <- merge(x = scorecd_id_name, y = compile_data,
-                      by = "SCHNAME", all.x = TRUE)
+                      by = "SCHNAME", all.x = TRUE) %>% na.omit()
+
+# Now that we have our college scorecard (coll_scorecd) let's clean it up some
+# more by mutating and selecting specific variables to make it easier for modeling
+
+coll_scorecd_bs <- coll_scorecd %>%
+  rename(MEDEARN10 = 'MD_EARN_WNE_P10-REPORTED-EARNINGS') %>%
+  filter(MEDEARN10 != 'NULL') %>%
+  filter(MEDEARN10 != 'PrivacySuppressed') %>%                                 # filter out any cells with NULL and PrivacySuppressed
+  filter(PREDDEG == 3) %>%
+  mutate(MEDEARN10 = as.numeric(MEDEARN10))
+
+coll_scorecd_bs <- coll_scorecd_bs %>%
+  select('UNITID', 'OPEID', 'SCHNAME', 'PREDDEG', 'CONTROL',
+         'LOCALE', 'KEYWORD', 'KEYNUM', 'MONTHORWEEK', 'INDEX',
+         'WOMENONLY', 'MENONLY', 'HBCU', 'MEDEARN10')
+
+# MEDIAN: Calculate value for median of all median earnings of graduates 10 years after
+# graduation for each college (MEDEARN10) to define threshold for high-earnings 
+# vs. low-earnings
+
+median_earning <- median(coll_scorecd_bs$MEDEARN10)                            # median threshold is $41,800
+
+# STANDARDIZED VARIABLES: To better make a direct comparison for this analysis, let's convert our independent 
+# variable (INDEX) and dependent variable (MEANEARN10) to measures of standard deviations from their means, 
+# creating a new data frame which groups them by their key number (KEYNUM)then summarizes them.
+
+standardized_var <- coll_scorecd_bs %>%
+  group_by(KEYNUM) %>%
+  summarise(SD_INDEX = (INDEX - mean(INDEX))/sd(INDEX), SCHNAME, CONTROL, KEYWORD,
+            MONTHORWEEK, KEYNUM, MEDEARN10, SD_INDEX)
