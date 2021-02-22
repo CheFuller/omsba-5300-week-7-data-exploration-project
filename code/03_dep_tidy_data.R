@@ -48,7 +48,7 @@ coll_scorecd_bs <- coll_scorecd_bs %>%
 median_earning <- median(coll_scorecd_bs$MEDEARN10)                            # median threshold is $41,800
 
 # STANDARDIZED VARIABLES: To better make a direct comparison for this analysis, let's convert our independent 
-# variable (INDEX) and dependent variable (MEANEARN10) to measures of standard deviations from their means, 
+# variable (INDEX) to a measure of standard deviations from their means, 
 # creating a new data frame which groups them by their key number (KEYNUM)then summarizes them.
 
 standardized_var <- coll_scorecd_bs %>%

@@ -44,15 +44,17 @@ source("../code/02_dep_read_data.R")
 
 ## Tidy Data
 
-Although all of desired data has been read, it requires a bit of clean up to prepare it for the regression model(s), graph(s) and analysis. First, we'll create a new data frame for the id name scorecards and call it scorecd_id_name. We'll accomplish this by merging the recent_cohorts and id_name_link data frames together by both unit ID (UNITID) and ope ID (OPEID). Next, create another data frame for the college scorecard through merging the scorecd_id_name data frame with our compile_data data frame by school name (SCHNAME). This will give us a more comprehensive spreadsheet to work with.
+Though all desired data has been read, it required more clean up to prepare for the regression model(s), graph(s) and analysis. First, I created a new data frame for the id name scorecards and called it scorecd_id_name. I chose to accomplish this by merging the recent_cohorts and id_name_link data frames together by both unit ID (UNITID) and ope ID (OPEID). Next, I created another data frame for the college scorecard through merging the scorecd_id_name data frame with our compile_data data frame by school name (SCHNAME). Considering the objective of the research question, this would give us a more comprehensive spreadsheet to work with.
 
-Although we have our college scorecard (coll_scorecd), some more tidying is still needed and is accomplished by mutating and selecting specific variables for colleges which perdominantly grant bachelor's degrees (coll_scorecd_bs) to make it easier for modeling. This step also included isolation of the first ten characters of the MONTHORWEEK variable to make it easier to work with the date (DATE) associated with each observation. With the data in decent shape at this point, I was able to identify the threshold for median earnings by calculating the median of all median earnings for all colleges (MEDEARN10). Further defining the threshold for high-earnings (> 41,800 dollars) vs. low-earnings (<41,800 dollars).
+
+After establishing the college scorecard (coll_scorecd), some more tidying was still needed and was accomplished by mutating and selecting specific variables for colleges which perdominantly grant bachelor's degrees (coll_scorecd_bs) to make it easier for modeling. This step also included isolation of the first ten characters of the MONTHORWEEK variable to make it easier to work with the date (DATE) associated with each observation. With the data in decent shape at this point, I was able to identify the threshold for median earnings by calculating the median of all median earnings for all colleges (MEDEARN10). Further defining the threshold for high-earnings (> 41,800 dollars) vs. low-earnings (<41,800 dollars).
+
+To better make a direct comparison for this analysis, I converted the independent variable (INDEX) to a measure of standard deviations from its mean, creating a new data frame which groups the data by their key number (KEYNUM) and summarizes them. Finally, I added high earnings (HIGHEARN) binary variable to standardized_var data frame to use as the dummy variable (for all median earnings above threshold HIGHEARN = 1, else HIGHEARN = 0) and created data frames for data collected before the September 2015 release (pre_sept2015) as well as after (post_sept2015). This was decided because 
 
 
 ```{r, echo = FALSE, results = 'hide'}
 source("../code/03_dep_tidy_data.R")
 ```
-
 
 
 ## Data Analysis
@@ -102,13 +104,7 @@ ggplot(data = model_02, aes(x = SD_INDEX, y = MEDEARN10)) +
 
 ## The Writeup
 
-The College Scorecard was released at the start of September 2015. Among colleges that predominantly grant bachelor’s degrees, did it result in more student interest in high-earnings colleges relative to low-earnings ones (as proxied by Google searches for keywords associated with those colleges)?
-
-  a. how can we define “high-earning” and “low-earning” colleges? There’s         not a single answer - be ready to defend your choice.
-  
-  b. What level should the data be at?
-  
-  c. How should the regression model be designed to answer the question           (transformations and functional form? Standard error adjustments?          etc.), and how can we interpret the results once we have them?
+How should the regression model be designed to answer the question           (transformations and functional form? Standard error adjustments?          etc.), and how can we interpret the results once we have them?
 
 After performing the base models regressing median earnings on standardized index,the graphs had indicated that the graphs were nonlinear. Although nonlinear, between pre_sept15 regression (model_01) and post_sept15 (model_02), model_01 looked better than model_02. Therefore, I had decided to use model_01 and expand on it by adding multiple controls and a polynomial term to figure out if high earnings (HIGHEARN) follows a polynomial. Hopefully, immproving the regression model.
 
